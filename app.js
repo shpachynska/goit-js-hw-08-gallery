@@ -63,3 +63,76 @@ const galleryItems = [
     description: 'Lighthouse Coast Sea',
   },
 ];
+
+const galleryContainer = document.querySelector('.js-gallery')
+const imagesMarkup = createImagesMarkup(galleryItems)
+const lightboxBigImage = document.querySelector('.lightbox__image')
+const closeButton = document.querySelector('[data-action="close-lightbox"]')
+const openModal = document.querySelector('.js-lightbox');
+
+
+galleryContainer.insertAdjacentHTML('beforeend', imagesMarkup);
+galleryContainer.addEventListener('click', onImageClick)
+
+function createImagesMarkup(images) {
+  return images.map(({ preview, original, description }) => {
+    return `
+      <li class="gallery__item">
+        <a
+          class="gallery__link"
+          href="${original}">
+          <img
+            class="gallery__image"
+            src="${preview}"
+            data-source="${original}"
+            alt="${description}"/>
+        </a>
+      </li>`;
+  })
+    .join('');   
+}
+
+function onImageClick(evt) {
+  evt.preventDefault();
+  const target = evt.target;
+  if (target.nodeName !== 'IMG') {
+    return;
+  }
+  console.log(target);
+  setModalWindowClass();
+  lightboxBigImage.src = target.dataset.source;
+  lightboxBigImage.alt = target.alt;
+  
+}
+
+function setModalWindowClass() {  
+  openModal.classList.add('is-open')
+}
+
+closeButton.addEventListener('click', closeModalWindow);
+
+function closeModalWindow() {
+  openModal.classList.remove('is-open')
+  lightboxBigImage.src = '';
+  lightboxBigImage.alt = '';
+  
+}
+
+const overlayEl = document.querySelector('.lightbox__overlay')
+overlayEl.addEventListener('click', closeModalWindow)
+
+window.addEventListener('keydown', function(event) {
+  if (event.code === 'Escape') {
+    closeModalWindow()
+  } return
+}, true)
+
+lightboxBigImage.addEventListener('keydown', function (event) {
+  if (event.code === 'ArrowRight') {
+  
+}
+})
+
+
+
+
